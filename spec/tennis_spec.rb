@@ -322,7 +322,7 @@ describe Tennis::Player do
         4.times {game.wins_ball(2)}#5
         4.times {game.wins_ball(2)}#6
 
-        expect(game.player2.sets_won).to eq(2)
+        expect(game.player2.sets_won).to eq(0)
         expect(game.player2.matches_won).to eq(1)
       end
     end

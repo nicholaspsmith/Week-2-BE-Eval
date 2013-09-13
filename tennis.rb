@@ -9,18 +9,36 @@ module Tennis
       @player2.opponent = @player1
     end
 
-
-    def wins_ball(num)
-      if num == 1
+    # A point is scored by a player
+    #
+    # player - the player who has the point (1 or 2)
+    #
+    # Returns nothing
+    def wins_ball(player)
+      if player == 1
         @player1.record_won_ball!
         won_game(@player1)
-      elsif num == 2
+      elsif player == 2
         @player2.record_won_ball!
         won_game(@player2)
       end
 
       reset_statuses
 
+      determine_score
+    end
+
+    # Sets deuce and advantage to false for both players
+    # to prepare for running determine_score method
+    def reset_statuses
+      @player1.deuce = false
+      @player2.deuce = false
+      @player1.advantage = false
+      @player2.advantage = false
+    end
+
+    # Determines if a 'deuce' or 'advantage' has occurred
+    def determine_score
       point1 = @player1.points
       point2 = @player2.points
 
@@ -36,6 +54,12 @@ module Tennis
       end
     end
 
+    # Determine if the player has won the game
+    # if so, it increments variable games_won
+    #
+    # player - the player who has scored the point
+    #
+    # Returns nothing
     def won_game(player)
       if player.advantage
         player.win = true
@@ -50,6 +74,12 @@ module Tennis
       end
     end
 
+    # Determine if the player has won the set
+    # if so, increments variable sets_won
+    #
+    # player - the player who has scored the point
+    #
+    # Returns nothing
     def won_set(player)
       if player.games_won >= 6 and player.opponent.games_won < 5
         player.sets_won += 1
@@ -64,6 +94,9 @@ module Tennis
       end
     end
 
+    # Determines if player has won the match
+    # 
+    # player - the player who has scored the point
     def won_match(player)
       if player.sets_won > 1 and player.opponent.sets_won < 1
         player.matches_won += 1
@@ -71,32 +104,29 @@ module Tennis
       end
     end
 
-    def reset_statuses
-      @player1.deuce = false
-      @player2.deuce = false
-      @player1.advantage = false
-      @player2.advantage = false
-    end
-
+    # Reset players scores back to zero to prepare for 
+    # new game
     def reset_scores
       @player1.points = 0
       @player2.points = 0
     end
 
+    # Reset all stats for both players other than matches_won
+    # to prepare for new match
     def start_new_match
-      @person1.points = 0
-      @person1.@deuce = false
-      @person1.@advantage = false
-      @person1.@win = false
-      @person1.@games_won = 0
-      @person1.@sets_won = 0
+      @player1.points = 0
+      @player1.deuce = false
+      @player1.advantage = false
+      @player1.win = false
+      @player1.games_won = 0
+      @player1.sets_won = 0
 
-      @person2.points = 0
-      @person2.@deuce = false
-      @person2.@advantage = false
-      @person2.@win = false
-      @person2.@games_won = 0
-      @person2.@sets_won = 0
+      @player2.points = 0
+      @player2.deuce = false
+      @player2.advantage = false
+      @player2.win = false
+      @player2.games_won = 0
+      @player2.sets_won = 0
     end
 
   end
