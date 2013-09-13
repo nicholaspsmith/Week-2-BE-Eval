@@ -5,20 +5,18 @@ module Tennis
     def initialize
       @player1 = Player.new
       @player2 = Player.new
-
       @player1.opponent = @player2
       @player2.opponent = @player1
     end
+
 
     def wins_ball(num)
       if num == 1
         @player1.record_won_ball!
         won_game(@player1)
-        won_set(@player1)
       elsif num == 2
         @player2.record_won_ball!
         won_game(@player2)
-        won_set(@player2)
       end
 
       reset_statuses
@@ -42,10 +40,12 @@ module Tennis
       if player.advantage
         player.win = true
         player.games_won += 1
+        won_set(player)
         reset_scores
       elsif player.points > 3 and player.opponent.points < 3
         player.win = true
         player.games_won += 1
+        won_set(player)
         reset_scores
       end
     end
@@ -53,8 +53,21 @@ module Tennis
     def won_set(player)
       if player.games_won >= 6 and player.opponent.games_won < 5
         player.sets_won += 1
+        @player1.games_won = 0
+        @player2.games_won = 0
+        won_match(player)
       elsif player.games_won == 7
         player.sets_won += 1
+        @player1.games_won = 0
+        @player2.games_won = 0
+        won_match(player)
+      end
+    end
+
+    def won_match(player)
+      if player.sets_won > 1 and player.opponent.sets_won < 1
+        player.matches_won += 1
+        start_new_match
       end
     end
 
@@ -70,10 +83,26 @@ module Tennis
       @player2.points = 0
     end
 
+    def start_new_match
+      @person1.points = 0
+      @person1.@deuce = false
+      @person1.@advantage = false
+      @person1.@win = false
+      @person1.@games_won = 0
+      @person1.@sets_won = 0
+
+      @person2.points = 0
+      @person2.@deuce = false
+      @person2.@advantage = false
+      @person2.@win = false
+      @person2.@games_won = 0
+      @person2.@sets_won = 0
+    end
+
   end
 
   class Player
-    attr_accessor :points, :opponent, :deuce, :advantage, :win, :games_won, :sets_won
+    attr_accessor :points, :opponent, :deuce, :advantage, :win, :games_won, :sets_won, :matches_won
 
     def initialize
       @points = 0
@@ -83,6 +112,7 @@ module Tennis
       @win = false
       @games_won = 0
       @sets_won = 0
+      @matches_won = 0
     end
 
     # Increments the score by 1.
