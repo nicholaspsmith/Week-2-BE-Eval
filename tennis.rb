@@ -9,6 +9,10 @@ module Tennis
       @player1.opponent = @player2
       @player2.opponent = @player1
     end
+
+    def wins_ball(player,num)
+      player.record_won_ball!
+    end
   end
 
   class Player
@@ -16,6 +20,9 @@ module Tennis
 
     def initialize
       @points = 0
+      @score = ['love','fifteen','thirty','forty']
+      @deuce = false
+      @advantage = false
     end
 
     # Increments the score by 1.
@@ -27,7 +34,7 @@ module Tennis
 
     # Returns the String score for the player.
     def score
-      return 'love' if @points == 0
+      @score[@points]
     end
   end
 end
