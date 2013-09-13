@@ -198,42 +198,117 @@ describe Tennis::Player do
     context "when player1 wins 2 games and player2 wins 1" do
       it "returns player1.games_won = 2 and player2.games_won = 1" do
         game = Tennis::Game.new
-        game.wins_ball(1)#1
-        game.wins_ball(2)#1
-        game.wins_ball(1)
-        game.wins_ball(2)
-        game.wins_ball(1)#3
-        game.wins_ball(2)#3
-        game.wins_ball(1)#4
-        game.wins_ball(1)#5
+        3.times {game.wins_ball(2)}
+        5.times {game.wins_ball(1)}
 
         expect(game.player1.games_won).to eq(1)
 
-        game.wins_ball(1)#1
-        game.wins_ball(2)#1
-        game.wins_ball(1)
-        game.wins_ball(2)
-        game.wins_ball(1)#3
-        game.wins_ball(2)#3
-        game.wins_ball(1)#4
-        game.wins_ball(1)#5
+        3.times {game.wins_ball(2)}
+        5.times {game.wins_ball(1)}
 
         expect(game.player1.games_won).to eq(2)
 
-
-        game.wins_ball(2)#1
-        game.wins_ball(2)#2
-        game.wins_ball(1)##1
-        game.wins_ball(2)#3
-        game.wins_ball(1)##2
-        game.wins_ball(2)#4
-        game.wins_ball(1)##3
-        game.wins_ball(2)#5 # win
+        3.times {game.wins_ball(1)}
+        5.times {game.wins_ball(2)}
 
         expect(game.player1.points).to eq(0)
         expect(game.player2.points).to eq(0)
         expect(game.player2.win).to eq(true)
         expect(game.player2.games_won).to eq(1)
+      end
+    end
+  end
+
+  describe  '#won_set?' do
+    context "player1 wins 6 games and player2 wins 0" do
+      it "sets player1.sets_won to 1" do
+        game = Tennis::Game.new
+        4.times {game.wins_ball(1)}#1
+        4.times {game.wins_ball(1)}#2
+        4.times {game.wins_ball(1)}#3
+        4.times {game.wins_ball(1)}#4
+        4.times {game.wins_ball(1)}#5
+        4.times {game.wins_ball(1)}#6
+
+
+        expect(game.player1.games_won).to eq(6)
+        expect(game.player1.sets_won).to eq(1)
+      end
+    end
+
+    context "player2 wins 6 games and player1 wins 5" do
+      it "does not increment player1.sets_won" do
+        game = Tennis::Game.new
+        4.times {game.wins_ball(2)}#1
+        4.times {game.wins_ball(2)}#2
+        4.times {game.wins_ball(2)}#3
+        4.times {game.wins_ball(2)}#4
+        4.times {game.wins_ball(2)}#5
+
+        4.times {game.wins_ball(1)}#1
+        4.times {game.wins_ball(1)}#2
+        4.times {game.wins_ball(1)}#3
+        4.times {game.wins_ball(1)}#4
+        4.times {game.wins_ball(1)}#5
+
+        4.times {game.wins_ball(2)}#6
+
+
+        expect(game.player1.games_won).to eq(5)
+        expect(game.player2.games_won).to eq(6)
+        expect(game.player2.sets_won).to eq(0)
+      end
+    end
+
+    context "player2 wins 7 games and player1 wins 5" do
+      it "sets player1.sets_won to 1" do
+        game = Tennis::Game.new
+        4.times {game.wins_ball(2)}#1
+        4.times {game.wins_ball(2)}#2
+        4.times {game.wins_ball(2)}#3
+        4.times {game.wins_ball(2)}#4
+        4.times {game.wins_ball(2)}#5
+
+        4.times {game.wins_ball(1)}#1
+        4.times {game.wins_ball(1)}#2
+        4.times {game.wins_ball(1)}#3
+        4.times {game.wins_ball(1)}#4
+        4.times {game.wins_ball(1)}#5
+
+        4.times {game.wins_ball(2)}#6
+        4.times {game.wins_ball(2)}#7
+
+
+        expect(game.player1.games_won).to eq(5)
+        expect(game.player2.games_won).to eq(7)
+        expect(game.player1.sets_won).to eq(0)
+        expect(game.player2.sets_won).to eq(1)
+      end
+    end
+
+    context "player2 wins 7 games and player1 wins 6" do
+      it "sets player1.sets_won to 1" do
+        game = Tennis::Game.new
+        4.times {game.wins_ball(2)}#1
+        4.times {game.wins_ball(2)}#2
+        4.times {game.wins_ball(2)}#3
+        4.times {game.wins_ball(2)}#4
+        4.times {game.wins_ball(2)}#5
+
+        4.times {game.wins_ball(1)}#1
+        4.times {game.wins_ball(1)}#2
+        4.times {game.wins_ball(1)}#3
+        4.times {game.wins_ball(1)}#4
+        4.times {game.wins_ball(1)}#5
+        4.times {game.wins_ball(1)}#6
+
+        4.times {game.wins_ball(2)}#6
+        4.times {game.wins_ball(2)}#7
+
+
+        expect(game.player1.games_won).to eq(6)
+        expect(game.player2.games_won).to eq(7)
+        expect(game.player2.sets_won).to eq(1)
       end
     end
   end
