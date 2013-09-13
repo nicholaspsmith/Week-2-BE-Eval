@@ -115,6 +115,23 @@ describe Tennis::Player do
       end
     end
 
+    context "when players both have 3 points and player1 scores once" do
+      it "does not count as a win" do
+        game = Tennis::Game.new
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        # p1: 4  p2: 3
+
+        expect(game.player1.win).to eq(false)
+        expect(game.player1.games_won).to eq(0)
+      end
+    end
+
     context "when player1 has advantage and scores again" do
       it "returns player1 is the winner" do
         game = Tennis::Game.new
@@ -130,9 +147,94 @@ describe Tennis::Player do
 
         expect(game.player2.win).to eq(false)
         expect(game.player1.win).to eq(true)
+      end
+    end
+  end
+
+  describe  "#games_won" do
+    context "when player1 wins a game" do
+      it "returns player1.games_won = 1" do
+                game = Tennis::Game.new
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        game.wins_ball(1)#5
+
         expect(game.player1.games_won).to eq(1)
       end
     end
 
+    context "when player1 wins 2 games " do
+      it "returns player1.games_won = 2" do
+        game = Tennis::Game.new
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        game.wins_ball(1)#5
+
+        expect(game.player1.games_won).to eq(1)
+
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        game.wins_ball(1)#5
+
+        expect(game.player1.games_won).to eq(2)
+      end
+    end
+
+    context "when player1 wins 2 games and player2 wins 1" do
+      it "returns player1.games_won = 2 and player2.games_won = 1" do
+        game = Tennis::Game.new
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        game.wins_ball(1)#5
+
+        expect(game.player1.games_won).to eq(1)
+
+        game.wins_ball(1)#1
+        game.wins_ball(2)#1
+        game.wins_ball(1)
+        game.wins_ball(2)
+        game.wins_ball(1)#3
+        game.wins_ball(2)#3
+        game.wins_ball(1)#4
+        game.wins_ball(1)#5
+
+        expect(game.player1.games_won).to eq(2)
+
+
+        game.wins_ball(2)#1
+        game.wins_ball(2)#2
+        game.wins_ball(1)##1
+        game.wins_ball(2)#3
+        game.wins_ball(1)##2
+        game.wins_ball(2)#4
+        game.wins_ball(1)##3
+        game.wins_ball(2)#5 # win
+
+        expect(game.player1.points).to eq(0)
+        expect(game.player2.points).to eq(0)
+        expect(game.player2.win).to eq(true)
+        expect(game.player2.games_won).to eq(1)
+      end
+    end
   end
 end

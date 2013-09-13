@@ -16,12 +16,14 @@ module Tennis
         if @player1.advantage
           @player1.win = true
           @player1.games_won += 1
+          reset_scores
         end
       elsif num == 2
         @player2.record_won_ball!
         if @player2.advantage
           @player2.win = true
-          @player1.games_won += 1
+          @player2.games_won += 1
+          reset_scores
         end
       end
 
@@ -44,10 +46,16 @@ module Tennis
         end
       end
     end
+
+    def reset_scores
+      @player1.points = 0
+      @player2.points = 0
+    end
+
   end
 
   class Player
-    attr_accessor :points, :opponent, :deuce, :advantage, :win, :games_won
+    attr_accessor :points, :opponent, :deuce, :advantage, :win, :games_won, :matches_won
 
     def initialize
       @points = 0
